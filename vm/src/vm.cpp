@@ -21,11 +21,11 @@ void VirtualMachine::loadCode(const char* binFile) {
     regs[PC] = beginCode;         // Load the initial position of the first instructions in the VM registers.
 }
 
-uint32_t VirtualMachine::readInstructionFromRegister(uint32_t index) {
-    uint32_t data = (mem[index] << 24);
-    data |= (mem[index + 1] << 16);
-    data |= (mem[index + 2] << 8);
-    data |= (mem[index + 3]);
+uint32_t VirtualMachine::readInstructionFromRegister(uint32_t reg) {
+    uint32_t data = (mem[reg] << 24);
+    data |= (mem[reg + 1] << 16);
+    data |= (mem[reg + 2] << 8);
+    data |= (mem[reg + 3]);
 
     return data;
 }
@@ -44,8 +44,8 @@ void VirtualMachine::executeInstruction() {
     regs[PC] += 4;
 
     switch (opcode) {
-        case 0x0D:  // MOVL
-            regs[i_rt] = i_imm18 & 0x3FFFF;
+        case MOVL:
+            regs[i_rt] = i_imm18 & 0xFFFF;
             break;
         default:
             printf("Instrução não implementada: 0x%08X (opcode 0x%08X)\n", instr, opcode);

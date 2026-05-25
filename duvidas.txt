@@ -1,0 +1,1 @@
+1 - método 'loadCode' possui como parâmetro uint32_t, mas é passado o registrador que é do tipo int32_t
