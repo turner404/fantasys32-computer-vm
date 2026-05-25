@@ -1,10 +1,18 @@
+#pragma once
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <vector>
 
 class VirtualMachine {
+   private:
+    uint32_t readInstructionFromRegister(uint32_t index);
+
    public:
-    const uint8_t SP = 14;
-    const uint8_t PC = 15;
-    const uint8_t SIZE_MEM = (16 * 1024 * 1024);  // 32.7KiB This is the max size that our games must have.
+    const int32_t SP = 14;
+    const int32_t PC = 15;
 
     /*
      * Registers:
@@ -15,11 +23,14 @@ class VirtualMachine {
      */
     int32_t regs[16];
 
-    // The memory that is load the binary program (our games).
+    /*
+     * The memory that is load the binary program (our games).
+     * A game must have max size of 16MB.
+     */
     uint8_t* mem;
 
     VirtualMachine();
     ~VirtualMachine();
-    void loadCode(char* binFile);
+    void loadCode(const char* binFile);
     void executeInstruction();
 };

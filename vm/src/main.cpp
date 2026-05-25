@@ -1,9 +1,12 @@
-#include <iostream>
-
-using namespace std;
+#include "../includes/vm.h"
 
 int main() {
-    cout << "Hello world" << endl;
+    VirtualMachine* vm = new VirtualMachine();
+    vm->loadCode("../games/bin/prog1");
+
+    while (1) {
+        vm->executeInstruction();
+    }
 
     return 0;
 }
