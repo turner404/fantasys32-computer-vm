@@ -19,7 +19,7 @@
 #define SHL 0x08
 #define SHR 0x09
 #define ROL 0x0A
-#define ROR 0X0B
+#define ROR 0x0B
 
 // Type I - Flow control
 #define ADDI 0x0C
@@ -63,6 +63,7 @@
 
 class VirtualMachine {
    private:
+    bool log = false;
     uint32_t readInstructionFromRegister(uint32_t reg);
 
    public:
