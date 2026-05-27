@@ -1,10 +1,27 @@
 #include "../includes/vm.h"
 
-VirtualMachine::VirtualMachine() {
+VirtualMachine::VirtualMachine(const char* binFile, int flag) {
+    this->flag = flag;
+
+    // Initialize VM memories
     uint size = (uint)16 * (uint)1024 * (uint)1024;  // setting 16MB to our mem size. The casts is for avoid the compiler warning.
     mem = new uint8_t[size];
     memset(mem, 0, sizeof(uint8_t) * size);
     memset(regs, 0, sizeof(int32_t) * 16);
+
+    if (binFile != nullptr)
+        loadCode(binFile);
+}
+
+void VirtualMachine::printFlags(uint32_t instr, uint32_t opcode, const char* instrName) {
+    if (flag > 0) {
+        std::cout << instrName;
+
+        if (flag > 1)
+            std::cout << " - instruction value: 0x" << std::hex << std::setw(8) << instr << ", opcode: " << std::hex << std::setw(8) << opcode;
+
+        std::cout << std::endl;
+    }
 }
 
 void VirtualMachine::loadCode(const char* binFile) {
@@ -76,22 +93,32 @@ void VirtualMachine::executeInstruction() {
     switch (opcode) {
         case ADD:
             regs[i_rd] = regs[i_rs] + regs[i_rt];
+            printFlags(instr, opcode, "ADD");
+            break;
+        case SUB:
+            regs[i_rd] = regs[i_rs] - regs[i_rt];
+            printFlags(instr, opcode, "SUB");
+            break;
+        case MUL:
+            regs[i_rd] = regs[i_rs] * regs[i_rt];
+            printFlags(instr, opcode, "MUL");
             break;
         case MOVL:
             regs[i_rt] = i_imm18 & 0xFFFF;
+            printFlags(instr, opcode, "MOVL");
             break;
         case MOVH:
             regs[i_rt] = regs[i_rt] | (i_imm18 << 16);
+            printFlags(instr, opcode, "MOVH");
             break;
-        // TODO others intructions
         case CLEAR:
-            printf("Limpa a tela. (instr: 0x%08X, opcode 0x%08X)\n", instr, opcode);
+            printFlags(instr, opcode, "CLEAR Limpa a tela");
             break;
         case RECT:
-            printf("Cria um Rect. (instr: 0x%08X, opcode 0x%08X)\n", instr, opcode);
+            printFlags(instr, opcode, "RECT Cria um Rect");
             break;
         default:
-            printf("Instrução não implementada: 0x%08X (opcode 0x%08X)\n", instr, opcode);
+            std::cout << "Instrução não implementada: 0x" << std::hex << std::setw(8) << instr << ", opcode: 0x" << std::hex << std::setw(8) << opcode << std::endl;
             exit(1);
     }
 }

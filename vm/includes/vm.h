@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <vector>
+#include <iomanip>
+#include <iostream>
 
 // Registers Types
 // Type R - move and memory
@@ -63,8 +64,9 @@
 
 class VirtualMachine {
    private:
-    bool log = false;
+    int flag = 0;  // To print the executed instruction (0 = no print, 1 = instr, 2 = instr and details)
     uint32_t readInstructionFromRegister(uint32_t reg);
+    void printFlags(uint32_t instr, uint32_t opcode, const char* instrName);
 
    public:
     const int32_t SP = 14;
@@ -85,7 +87,7 @@ class VirtualMachine {
      */
     uint8_t* mem;
 
-    VirtualMachine();
+    VirtualMachine(const char* binFile, int flag = 0);
     ~VirtualMachine();
     void loadCode(const char* binFile);
     void executeInstruction();
