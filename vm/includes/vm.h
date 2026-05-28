@@ -7,6 +7,8 @@
 #include <iomanip>
 #include <iostream>
 
+#define TAM_MEM (16 * 1024 * 1024)
+
 // Registers Types
 // Type R - move and memory
 #define ADD 0x00

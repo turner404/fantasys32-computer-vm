@@ -4,7 +4,7 @@ VirtualMachine::VirtualMachine(const char* binFile, int flag) {
     this->flag = flag;
 
     // Initialize VM memories
-    uint size = (uint)16 * (uint)1024 * (uint)1024;  // setting 16MB to our mem size. The casts is for avoid the compiler warning.
+    uint size = (uint)TAM_MEM;  // setting 16MB to our mem size. The casts is for avoid the compiler warning.
     mem = new uint8_t[size];
     memset(mem, 0, sizeof(uint8_t) * size);
     memset(regs, 0, sizeof(int32_t) * 16);
