@@ -230,11 +230,44 @@ void VirtualMachine::executeInstruction() {
             regs[SP] = regs[SP] + 4;
             printFlags(instr, opcode, "RET");
             break;
-        case CLEAR:
-            printFlags(instr, opcode, "CLEAR Limpa a tela");
+        case RECT:  // Type S
+            printFlags(instr, opcode, "RECT todo...");
             break;
-        case RECT:
-            printFlags(instr, opcode, "RECT Cria um Rect");
+        case DSPRITE:
+            printFlags(instr, opcode, "DSPRITE todo...");
+            break;
+        case CLEAR:
+            printFlags(instr, opcode, "CLEAR todo...");
+            break;
+        case GKEY:
+            printFlags(instr, opcode, "GKEY todo...");
+            break;
+        case PLAY:
+            printFlags(instr, opcode, "PLAY todo...");
+            break;
+        case SLEEP:
+            printFlags(instr, opcode, "SLEEP todo...");
+            break;
+        case PSTR:
+            printFlags(instr, opcode, "PSTR todo...");
+            break;
+        case PINT:
+            printFlags(instr, opcode, "PINT todo...");
+            break;
+        case SYSCALL:
+            printFlags(instr, opcode, "SYSCALL todo...");
+            break;
+        case SRAND:
+            printFlags(instr, opcode, "SRAND todo...");
+            break;
+        case RAND:
+            printFlags(instr, opcode, "RAND todo...");
+            break;
+        case FRAMENUM:
+            printFlags(instr, opcode, "FRAMENUM todo...");
+            break;
+        case HALT:
+            printFlags(instr, opcode, "HALT todo...");
             break;
         default:
             std::cout << "Instrução não implementada: 0x" << std::hex << std::setw(8) << instr << ", opcode: 0x" << std::hex << std::setw(8) << opcode << std::endl;
