@@ -137,11 +137,11 @@ void VirtualMachine::executeInstruction() {
             break;
         case ROR:
             regs[i_rd] = (regs[i_rs] >> (regs[i_rt] & 0x1F)) | (regs[i_rs] << (32 - (regs[i_rt] & 0x1F)));
-            printFlags(instr, opcode, "MUL");
+            printFlags(instr, opcode, "ROR");
             break;
         case ADDI:  // Type I
-            regs[i_rt] = regs[i_rt] + i_imm18;
-            printFlags(instr, opcode, "MOVL");
+            regs[i_rt] = regs[i_rs] + i_imm18;
+            printFlags(instr, opcode, "ADDI");
             break;
         case MOVL:
             regs[i_rt] = i_imm18 & 0xFFFF;
@@ -150,6 +150,50 @@ void VirtualMachine::executeInstruction() {
         case MOVH:
             regs[i_rt] = regs[i_rt] | (i_imm18 << 16);
             printFlags(instr, opcode, "MOVH");
+            break;
+        case LOAD:
+            regs[i_rt] = mem[regs[i_rs] + (i_imm18 * 4)];
+            printFlags(instr, opcode, "LOAD");
+            break;
+        case STORE:
+            mem[regs[i_rs] + (i_imm18 * 4)] = regs[i_rt];
+            printFlags(instr, opcode, "STORE");
+            break;
+        case BEQ:
+            if (regs[i_rs] == regs[i_rt]) {
+                regs[PC] = regs[PC] + ((i_imm18 & 0xFFFF) * 4);
+            }
+            printFlags(instr, opcode, "BEQ");
+            break;
+        case BNE:
+            if (regs[i_rs] != regs[i_rt]) {
+                regs[PC] = regs[PC] + ((i_imm18 & 0xFFFF) * 4);
+            }
+            printFlags(instr, opcode, "BNE");
+            break;
+        case BLT:
+            if (regs[i_rs] < regs[i_rt]) {
+                regs[PC] = regs[PC] + ((i_imm18 & 0xFFFF) * 4);
+            }
+            printFlags(instr, opcode, "BLT");
+            break;
+        case BGT:
+            if (regs[i_rs] > regs[i_rt]) {
+                regs[PC] = regs[PC] + ((i_imm18 & 0xFFFF) * 4);
+            }
+            printFlags(instr, opcode, "BGT");
+            break;
+        case BLE:
+            if (regs[i_rs] <= regs[i_rt]) {
+                regs[PC] = regs[PC] + ((i_imm18 & 0xFFFF) * 4);
+            }
+            printFlags(instr, opcode, "BLE");
+            break;
+        case BGE:
+            if (regs[i_rs] >= regs[i_rt]) {
+                regs[PC] = regs[PC] + ((i_imm18 & 0xFFFF) * 4);
+            }
+            printFlags(instr, opcode, "BGE");
             break;
         case CLEAR:
             printFlags(instr, opcode, "CLEAR Limpa a tela");
