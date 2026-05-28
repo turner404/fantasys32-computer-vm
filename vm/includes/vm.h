@@ -66,7 +66,7 @@
 
 class VirtualMachine {
    private:
-    int flag = 0;  // To print the executed instruction (0 = no print, 1 = instr, 2 = instr and details)
+    int flag = 0;  // To print log (0 = no print, 1 = instr, 2 = instr and details)
     uint32_t readInstructionFromRegister(uint32_t reg);
     void printFlags(uint32_t instr, uint32_t opcode, const char* instrName);
 

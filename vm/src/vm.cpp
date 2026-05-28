@@ -195,6 +195,41 @@ void VirtualMachine::executeInstruction() {
             }
             printFlags(instr, opcode, "BGE");
             break;
+        case JMP:  // Type J
+            regs[PC] = addr26 * 4;
+            printFlags(instr, opcode, "JMP");
+            break;
+        case CALL:
+            // TODO...
+            printFlags(instr, opcode, "CALL todo...");
+            break;
+        case PUSH:  // Type U
+            regs[SP] = regs[SP] - 4;
+            mem[regs[SP]] = regs[i_rd];
+            printFlags(instr, opcode, "PUSH");
+            break;
+        case POP:
+            regs[i_rd] = mem[regs[SP]];
+            regs[SP] = regs[SP] + 4;
+            printFlags(instr, opcode, "POP");
+            break;
+        case INC:
+            regs[i_rd] = regs[i_rd] + 1;
+            printFlags(instr, opcode, "INC");
+            break;
+        case DEC:
+            regs[i_rd] = regs[i_rd] - 1;
+            printFlags(instr, opcode, "DEC");
+            break;
+        case NOT:
+            regs[i_rd] = ~regs[i_rd];
+            printFlags(instr, opcode, "NOT");
+            break;
+        case RET:
+            regs[PC] = mem[regs[SP]];
+            regs[SP] = regs[SP] + 4;
+            printFlags(instr, opcode, "RET");
+            break;
         case CLEAR:
             printFlags(instr, opcode, "CLEAR Limpa a tela");
             break;
