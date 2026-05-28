@@ -91,7 +91,7 @@ void VirtualMachine::executeInstruction() {
     regs[PC] += 4;
 
     switch (opcode) {
-        case ADD:
+        case ADD:  // Type R
             regs[i_rd] = regs[i_rs] + regs[i_rt];
             printFlags(instr, opcode, "ADD");
             break;
@@ -102,6 +102,46 @@ void VirtualMachine::executeInstruction() {
         case MUL:
             regs[i_rd] = regs[i_rs] * regs[i_rt];
             printFlags(instr, opcode, "MUL");
+            break;
+        case DIV:
+            regs[i_rd] = regs[i_rs] / regs[i_rt];
+            printFlags(instr, opcode, "DIV");
+            break;
+        case MOD:
+            regs[i_rd] = regs[i_rs] % regs[i_rt];
+            printFlags(instr, opcode, "MOD");
+            break;
+        case AND:
+            regs[i_rd] = regs[i_rs] & regs[i_rt];
+            printFlags(instr, opcode, "AND");
+            break;
+        case OR:
+            regs[i_rd] = regs[i_rs] | regs[i_rt];
+            printFlags(instr, opcode, "OR");
+            break;
+        case XOR:
+            regs[i_rd] = regs[i_rs] ^ regs[i_rt];
+            printFlags(instr, opcode, "XOR");
+            break;
+        case SHL:
+            regs[i_rd] = regs[i_rs] << (regs[i_rt] & 0x1F);
+            printFlags(instr, opcode, "SHL");
+            break;
+        case SHR:
+            regs[i_rd] = regs[i_rs] >> (regs[i_rt] & 0x1F);
+            printFlags(instr, opcode, "SHR");
+            break;
+        case ROL:
+            regs[i_rd] = (regs[i_rs] << (regs[i_rt] & 0x1F)) | (regs[i_rs] >> (32 - (regs[i_rt] & 0x1F)));
+            printFlags(instr, opcode, "ROL");
+            break;
+        case ROR:
+            regs[i_rd] = (regs[i_rs] >> (regs[i_rt] & 0x1F)) | (regs[i_rs] << (32 - (regs[i_rt] & 0x1F)));
+            printFlags(instr, opcode, "MUL");
+            break;
+        case ADDI:  // Type I
+            regs[i_rt] = regs[i_rt] + i_imm18;
+            printFlags(instr, opcode, "MOVL");
             break;
         case MOVL:
             regs[i_rt] = i_imm18 & 0xFFFF;
