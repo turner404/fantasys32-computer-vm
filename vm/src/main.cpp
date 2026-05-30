@@ -1,6 +1,6 @@
 #include <filesystem>
 
-#include "../includes/vm.h"
+#include "vm.h"
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {

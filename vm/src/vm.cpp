@@ -1,4 +1,4 @@
-#include "../includes/vm.h"
+#include "vm.h"
 
 VirtualMachine::VirtualMachine(const char* binFile, int flag) {
     this->flag = flag;
