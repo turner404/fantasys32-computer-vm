@@ -1,97 +1,155 @@
-# Fantasys32: A Fantasy Computer of 32-bits
+# Fantasys32 — A 32-bit Fantasy Computer
 
-The Fantasy Computer is a hypothetical machine designed to allow the implementation of a custom instruction set and simple video-games creation. This project is split into phases: the implementation of the VM and the creation of a simple game to be run by the VM. This is a project made for my university course.
+Fantasys32 is a custom 32-bit fantasy computer built as a university project. It consists of three main components: a custom assembler that translates assembly source files into binary programs, a virtual machine (VM) that executes those programs with a graphical display, and a set of games written in the custom assembly language.
 
-## Estrutura do projeto
+---
+
+## Project Structure
 
 ```
 fantasys32-computer-vm/
-├── assembler/        Montador (.asm -> .bin), fornecido pelo professor
+├── assembler/          # Assembler source code and Makefile
 │   ├── src/
-│   └── bin/
-├── vm/               Máquina virtual (C++ + SDL2)
+│   └── Makefile
+├── vm/                 # Virtual Machine source code and Makefile
 │   ├── src/
-│   └── bin/
-└── games/            Jogos em Assembly
-    ├── src/
-    │   ├── prog1.asm     Exemplo da especificação
-    │   └── breakout.asm  Jogo Breakout
-    └── bin/
-        └── breakout.bin  Binário gerado pelo montador
+│   └── Makefile
+└── games/
+    ├── src/            # Assembly source files (.asm)
+    └── bin/            # Compiled binary files (.bin)
 ```
 
-## Dependências
+### Components
 
-- Compilador C++ (`g++` ou `clang++`)
-- `make`
-- SDL2 (`libsdl2-dev` no Linux)
+| Component | Description |
+|-----------|-------------|
+| **Assembler** | Translates `.asm` source files into `.bin` binaries loadable by the VM. Supports labels, constants (`.equ`), variables (`.var`), byte arrays (`.space`), strings (`.string`), and all ISA instruction types (R, I, J, U, S). |
+| **Virtual Machine** | Executes `.bin` programs. Features a 16 MB memory space, 16 general-purpose 32-bit registers, an SDL2-based 320×240 graphical display, keyboard input, a built-in 8×8 bitmap font for text rendering, and a simple LCG random number generator. |
+| **Snake** | Classic snake game. The snake grows each time it eats the apple, which relocates randomly. The game ends if the snake hits a wall, displaying a Game Over screen with the final score. |
+| **Breakout** | Brick-breaker game with 5 rows of coloured bricks, a paddle, a ball, 3 lives, and a score system. Ball speed increases as more bricks are destroyed. Includes a win screen and a Game Over screen. |
 
-No Ubuntu/Debian:
+---
 
-```sh
+## Dependencies
+
+The following tools and libraries must be installed before building:
+
+| Dependency | Minimum Version | Purpose |
+|------------|-----------------|---------|
+| `g++` | C++17 | Compiling the assembler and the VM |
+| `make` | Any | Running the build scripts |
+| `libSDL2-dev` | 2.0 | Graphics window and keyboard input for the VM |
+| `argparse` (header-only) | — | CLI argument parsing for the VM (`/usr/include/argparse/argparse.hpp`) |
+
+### Installing dependencies on Ubuntu/Debian
+
+```bash
+sudo apt update
 sudo apt install build-essential libsdl2-dev
 ```
 
-## Como compilar
+> `argparse` is a header-only library. If it is not already present at `/usr/include/argparse/argparse.hpp`, place the single header there manually or adjust the include path in `vm/src/main.cpp`.
 
-### Montador (assembler)
+---
 
-```sh
-cd assembler
-make
+## Compilation
+
+### 1. Build the Assembler
+
+```bash
+make -C assembler
 ```
 
-### Máquina virtual (VM)
+This produces the `assembler/assembler` executable.
 
-```sh
-cd vm
-make
+### 2. Build the Virtual Machine
+
+```bash
+make -C vm
 ```
 
-## O jogo: Breakout
+This produces the `vm/vm` executable.
 
-Clone clássico do Breakout. A bola desce, você rebate com a raquete e quebra
-os blocos. Cada fileira de blocos tem uma cor e uma pontuação diferente.
+---
 
-### Gerar o binário do jogo
+## Usage
 
-O arquivo-fonte é `games/src/breakout.asm`. Para gerar o `.bin` que a VM
-executa, rode o montador sobre ele:
+### Assembling a game
 
-```sh
+Convert an `.asm` source file into a `.bin` binary:
+
+```bash
+./assembler/assembler <input.asm> <output.bin>
+```
+
+**Examples:**
+
+```bash
+./assembler/assembler games/src/snake.asm    games/bin/snake.bin
 ./assembler/assembler games/src/breakout.asm games/bin/breakout.bin
 ```
 
-### Rodar o jogo
+### Running a game
 
-A VM recebe o caminho do `.bin` e algumas opções:
-
-```sh
-./vm/vm games/bin/breakout.bin
+```bash
+./vm/vm <game.bin> <scale>
 ```
 
-Para abrir a janela em escala maior (a tela nativa é 320x240):
+- `<game.bin>` — path to the compiled binary.
+- `<scale>` — integer window scale factor. `1` = 320×240, `2` = 640×480, `3` = 960×720, etc.
 
-```sh
-./vm/vm --scale 2 games/bin/breakout.bin
+**Examples:**
+
+```bash
+# Snake at native resolution
+./vm/vm games/bin/snake.bin 1
+
+# Breakout at 2x scale
+./vm/vm games/bin/breakout.bin 2
 ```
 
-### Opções de linha de comando da VM
+### Optional VM flags
 
-- `--scale <fator>`: fator de escala da janela. `--scale 2` gera uma janela de
-  640x480. Padrão: 1.
-- `--no-syscall`: desativa a instrução `SYSCALL` (a VM a ignora). O jogo foi
-  feito para funcionar normalmente com essa opção ligada, pois não depende de
-  syscalls para a lógica principal.
-- `--help`: mostra a ajuda.
+| Flag | Description |
+|------|-------------|
+| `-V` | Enable verbose/debug output (repeat for more detail: `-V -V`) |
+| `--no-syscall` | Silently ignore `SYSCALL` instructions instead of executing them |
 
-## Controles
+```bash
+# Run Snake with debug logging
+./vm/vm games/bin/snake.bin 1 -V
+```
 
-- Seta esquerda / direita: mover a raquete
-- ENTER: reiniciar após o fim de jogo
+---
 
-## Objetivo
+## ISA Overview
 
-Quebre todos os blocos sem deixar a bola cair. Você tem 3 vidas. A pontuação
-depende da cor da fileira (as fileiras de cima valem mais). A bola acelera
-conforme você marca pontos.
+Fantasys32 uses a custom 32-bit RISC-like instruction set with five instruction formats:
+
+| Type | Instructions | Description |
+|------|-------------|-------------|
+| **R** | `ADD`, `SUB`, `MUL`, `DIV`, `MOD`, `AND`, `OR`, `XOR`, `SHL`, `SHR`, `ROL`, `ROR` | Register-to-register arithmetic and logic |
+| **I** | `ADDI`, `MOVL`, `MOVH`, `LOAD`, `STORE`, `BEQ`, `BNE`, `BLT`, `BGT`, `BLE`, `BGE` | Immediate operations, memory access, and conditional branches |
+| **J** | `JMP`, `CALL` | Unconditional jumps and subroutine calls |
+| **U** | `PUSH`, `POP`, `INC`, `DEC`, `NOT`, `RET` | Stack and unary operations |
+| **S** | `RECT`, `CLEAR`, `GKEY`, `SLEEP`, `PSTR`, `PINT`, `SRAND`, `RAND`, `HALT`, ... | System calls: graphics, input, timing, I/O |
+
+The processor has 16 registers (`R0`–`R15`), where `R14` is the stack pointer (SP) and `R15` is the program counter (PC). `R0` is a general-purpose register (not hardwired to zero).
+
+---
+
+## Controls
+
+### Snake
+
+| Key | Action |
+|-----|--------|
+| Arrow keys | Change direction |
+| Enter | Dismiss the Game Over screen |
+
+### Breakout
+
+| Key | Action |
+|-----|--------|
+| Left / Right arrow keys | Move paddle |
+| Enter | Restart after Game Over or win screen |
